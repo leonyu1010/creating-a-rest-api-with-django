@@ -8,7 +8,7 @@ import os
 from os.path import dirname, abspath
 import subprocess
 from .models import CartItem
-
+  
 # Create your views heretvalre.
 
 
@@ -82,36 +82,18 @@ class ShoppingCartUpdate(View):
 class ShowCommit(View):
 
     def get(self, request):
-        cwd = os.getcwd()
-        print(cwd)
-        print(os.path.dirname(os.getcwd()))
-        
-        config_repo = dirname(abspath(__file__)).replace("api_app", "config-repo")
-        print(__file__)
-        print(config_repo)
-        cmd = ('ls', config_repo)
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-        lines = p.stdout.readlines()
-        print(lines)
-        retval = p.wait()
-        if retval != 0:
-            return JsonResponse({"msg" : "cannot ls {}".format(config_repo)})
-        
-        os.chdir(config_repo)
-        print(os.getcwd())
-        
-        
         branch = request.GET['branch']
         dataset = request.GET['dataset']
         metrics = request.GET['metrics']
         commit_id = request.GET['commit_id']
         print(branch, dataset, metrics, commit_id)
-
-
+        config_repo = dirname(abspath(__file__)).replace("api_app", "config-repo")
+        print(config_repo)
+        print(type(config_repo))
         
         path = "test_config"
         query = "{}:{}".format(commit_id, path)
-        cmd = ('git', 'cat-file', '-p', query)
+        cmd = ('git', '-C', config_repo, 'cat-file', '-p', query)
         print(' '.join(cmd))
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
         lines = p.stdout.readlines()
@@ -119,11 +101,8 @@ class ShowCommit(View):
         retvalue = p.wait()
         if retvalue != 0:
             msg = "unable to read config (retval={}): {}".format(retvalue, path)
-            data = {
-            'msg': msg,
-            }
-            return JsonResponse(data)
-        
+            return JsonResponse({'msg': msg,})
+            
         try:
            msg = json.loads("".join(lines))   
             
