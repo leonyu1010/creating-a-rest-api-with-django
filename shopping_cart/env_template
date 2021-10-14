@@ -11,3 +11,5 @@ APP_PORT=8000
 DJANGO_SU_NAME=admin
 DJANGO_SU_EMAIL=admin12@admin.com
 DJANGO_SU_PASSWORD=mypass123
+
+CONFIG_REPO=config-repo

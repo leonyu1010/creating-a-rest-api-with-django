@@ -87,7 +87,7 @@ class ShowCommit(View):
         metrics = request.GET['metrics']
         commit_id = request.GET['commit_id']
         print(branch, dataset, metrics, commit_id)
-        config_repo = dirname(abspath(__file__)).replace("api_app", "config-repo")
+        config_repo = dirname(abspath(__file__)).replace("api_app", os.environ.get('CONFIG_REPO'))
         print(config_repo)
         print(type(config_repo))
         
